@@ -1,20 +1,15 @@
-const express = require('express');
+const express = require("express");
+const bodyParser = require("body-parser");
 
-const webApp = express();
+const homeRoute = require("./routes/home_route");
+const dialogflowRoute = require("./routes/dialogflow_route");
 
-webApp.use(express.urlencoded({
-    extended: true
-}));
-webApp.use(express.json());
+const app = express();
+app.use(bodyParser.json());
 
-const PORT = process.env.PORT || 5000;
+// Routes
+app.use("/", homeRoute);
+app.use("/webhook", dialogflowRoute);
 
-const homeRoute = require('../routes/home_route');
-const dialogflowRoute = require('../routes/dialogflow_route');
-
-webApp.use(homeRoute.router);
-webApp.use(dialogflowRoute.router);
-
-webApp.listen(PORT, () => {
-    console.log(`Server is up and running at ${PORT}`);
-});
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => console.log(`🚀 Webhook running on port ${PORT}`));
